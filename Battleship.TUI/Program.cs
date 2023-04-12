@@ -1,3 +1,3 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Battleship;
 
-Console.WriteLine("Hello, World!");
+var A = new Game();
