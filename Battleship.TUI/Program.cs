@@ -1,6 +1,9 @@
 ﻿using Battleship.TUI;
 using System.Text;
 
+
+var menu = new Menu();
+
 var playZoneStartX = 1;
 var playZoneStartY = 1;
 var lignes = 10;
@@ -10,11 +13,14 @@ var ocean = new Ocean(10 * 2, 10);
 
 while (true)
 {
-    DrawOcean();
+    //DrawOcean();
 
-    DrawShip(2, 3);
+    //DrawShip(2, 3);
 
-    await Task.Delay(1000);
+
+    menu.Draw();
+
+    await Task.Delay(500);
 }
 
 
