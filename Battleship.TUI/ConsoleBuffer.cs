@@ -5,7 +5,8 @@ internal class ConsoleBuffer
     public readonly int BufferHeight;
     public readonly int BufferWidth;
     public readonly char[] Buffer;
-    public readonly ConsoleColor[] BufferColor;
+    public readonly ConsoleColor[] BufferForegroundColor;    
+    public readonly ConsoleColor[] BufferBackgroundColor;
 
     public ConsoleBuffer() : this(Console.BufferHeight, Console.BufferWidth) { }
 
@@ -14,7 +15,8 @@ internal class ConsoleBuffer
         BufferHeight = height;
         BufferWidth = width;
         Buffer = Enumerable.Repeat(' ', BufferHeight * BufferWidth).ToArray();
-        BufferColor = new ConsoleColor[BufferHeight * BufferWidth];
+        BufferForegroundColor = new ConsoleColor[BufferHeight * BufferWidth];
+        BufferBackgroundColor = new ConsoleColor[BufferHeight * BufferWidth];
     }
 
     /// <summary>
@@ -28,7 +30,9 @@ internal class ConsoleBuffer
     /// - or -
     /// when left is greater than the width of the buffer
     /// </exception>
-    public void WriteTo(in string text, in int top, in int left, in ConsoleColor color = ConsoleColor.Gray)
+    public void WriteTo( in string text, in int top, in int left,
+                         in ConsoleColor foregroundColor = ConsoleColor.Gray,
+                         in ConsoleColor backgroundColor = ConsoleColor.Black )
     {
         var startIndex = BufferWidth * top + left;
 
@@ -42,7 +46,8 @@ internal class ConsoleBuffer
         for (int i = 0; i < text.Length; i++)
         {
             Buffer[startIndex + i] = text[i];
-            BufferColor[startIndex + i] = color;
+            BufferForegroundColor[startIndex + i] = foregroundColor;
+            BufferBackgroundColor[startIndex + i] = backgroundColor;
         }
     }
 
@@ -58,7 +63,9 @@ internal class ConsoleBuffer
     /// - or -
     /// when left is greater than the width of the buffer
     /// </exception>
-    public void WriteTo(in char character, in int top, in int left, in ConsoleColor color = ConsoleColor.Gray)
+    public void WriteTo( in char character, in int top, in int left, 
+                         in ConsoleColor foregroundColor = ConsoleColor.Gray,
+                         in ConsoleColor backgroundColor = ConsoleColor.Black )
     {
         var startIndex = BufferWidth * top + left;
 
@@ -69,7 +76,8 @@ internal class ConsoleBuffer
             throw new ArgumentOutOfRangeException("left is greater than the width of the buffer");
 
         Buffer[startIndex] = character;
-        BufferColor[startIndex] = color;
+        BufferForegroundColor[startIndex] = foregroundColor;
+        BufferBackgroundColor[startIndex] = backgroundColor;
     }
 
     public void Clear()
@@ -106,7 +114,8 @@ internal class ConsoleBuffer
                     continue;
 
                 Console.SetCursorPosition(xOffset, yOffset);
-                Console.ForegroundColor = BufferColor[y * BufferWidth + x];
+                Console.ForegroundColor = BufferForegroundColor[y * BufferWidth + x];
+                Console.BackgroundColor = BufferBackgroundColor[y * BufferWidth + x];
                 Console.Write(Buffer[y * BufferWidth + x]);
             }
         }

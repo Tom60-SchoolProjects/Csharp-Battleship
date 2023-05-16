@@ -17,13 +17,20 @@ internal class Menu
 
         waveOffset = waveOffset > buffer.BufferWidth ? 0 : waveOffset + 1;
 
-        DrawWave(3, buffer.BufferHeight - 11, 0.30, waveOffset * 1, ConsoleColor.DarkGray);
+        try {
+            DrawWave(3, buffer.BufferHeight - 11, 0.30, waveOffset * 1, ConsoleColor.DarkGray);
 
-        DrawWave(4, buffer.BufferHeight - 9, 0.20, waveOffset * 1.5, ConsoleColor.Blue);
+            DrawWave(4, buffer.BufferHeight - 9, 0.20, waveOffset * 1.5, ConsoleColor.Blue);
 
-        DrawTitle();
+            DrawTitle(buffer.BufferHeight - 19);
+            DrawMenu(buffer.BufferHeight / 3);
 
-        DrawWave(5, buffer.BufferHeight - 7, 0.18, waveOffset * 2, ConsoleColor.DarkCyan);
+            DrawWave(5, buffer.BufferHeight - 7, 0.18, waveOffset * 2, ConsoleColor.DarkCyan);
+        } catch (Exception ex) when (ex is IndexOutOfRangeException ||
+                                     ex is ArgumentOutOfRangeException) {
+            buffer.Clear();
+            buffer.WriteTo("Please resize the window to be bigger", buffer.BufferHeight / 2, buffer.BufferWidth / 2 - 20, ConsoleColor.Red);
+        }
 
         buffer.Flush();
 
@@ -32,7 +39,7 @@ internal class Menu
         Console.ResetColor();
     }
 
-    private void DrawTitle()
+    private void DrawTitle(int startY)
     {
         var title = new string[] {
             @"                                     # #  ( )",
@@ -48,9 +55,26 @@ internal class Menu
 
         for (int i = 0; i < title.Length; i++)
         {
-            buffer.WriteTo(title[i], buffer.BufferHeight / 3 + 1 + i, buffer.BufferWidth / 2 - titleWitdh / 2, ConsoleColor.Gray);
+            buffer.WriteTo(title[i], startY + i, buffer.BufferWidth / 2 - titleWitdh / 2, ConsoleColor.Gray);
         }
 
+    }
+
+    private void DrawMenu(int startY)
+    {
+        var menu = new string[] {
+            @" .---------------------------------.",
+            @" | Press Enter to start a new game |",
+            @" |     Press S to put on music     |",
+            @" '---------------------------------'", };
+
+        int menuWitdh = menu[0].Length;
+
+        for (int i = 0; i < menu.Length; i++)
+        {
+            // buffer.BufferHeight / 3 + 10
+            buffer.WriteTo(menu[i], startY + i, buffer.BufferWidth / 2 - menuWitdh / 2, ConsoleColor.Gray);
+        }
     }
 
     private void DrawBackground()

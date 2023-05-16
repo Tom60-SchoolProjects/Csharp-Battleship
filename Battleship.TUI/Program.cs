@@ -1,59 +1,85 @@
 ﻿using Battleship.TUI;
-using System.Text;
+using Battleship.TUI.Enums;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
+switch (await ShowMenuAsync()) {
+    case MenuOption.Exit:
+        return;
+    case MenuOption.Start:
+        break;
+}
 
-var menu = new Menu();
-
-var playZoneStartX = 1;
-var playZoneStartY = 1;
-var lignes = 10;
-var collones = 10;
-
-var ocean = new Ocean(10 * 2, 10);
+var battleground = new Battleground(10, 10);
 
 while (true)
 {
-    //DrawOcean();
+    battleground.Draw();
 
-    //DrawShip(2, 3);
-
-
-    menu.Draw();
-
+    // Refresh speed
     await Task.Delay(500);
 }
 
+async Task<MenuOption> ShowMenuAsync() {
 
+    var menu = new Menu();
 
-Console.SetCursorPosition(0, playZoneStartX + lignes + 1);
-
-void DrawOcean()
-{
-    Console.Clear();
-
-    Console.SetCursorPosition(0, playZoneStartX);
-
-    var drawGrid = ocean.GetNextDraw();
-
-    for (int y = 0; y < collones; y++)
+    while (true)
     {
-        Console.SetCursorPosition(playZoneStartX, playZoneStartY + y);
+        // Manage input
+        if (Console.KeyAvailable)
+        {
+            var key = Console.ReadKey(true);
 
-        for (int x = 0; x < lignes * 2; x++)
-            Console.Write(drawGrid[x, y]);
+            switch (key.Key)
+            {
+                case ConsoleKey.Escape:
+                    return MenuOption.Exit;
+                
+                case ConsoleKey.Enter:
+                    return MenuOption.Start;
+                case ConsoleKey.S:
+                    OpenUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+                    break;
+            }
+        }
+        // Menu loop
+        else
+        {
+            menu.Draw();
+        }
+
+        // Refresh speed
+        await Task.Delay(500);
     }
 }
 
-void DrawShip(int x, int y)
+// https://stackoverflow.com/a/43232486
+void OpenUrl(string url)
 {
-    Console.SetCursorPosition(x, y);
-    Console.Write('^');
-    Console.SetCursorPosition(x, y + 1);
-    Console.Write('║');
-    Console.SetCursorPosition(x, y + 2);
-    Console.Write('║');
-    Console.SetCursorPosition(x, y + 3);
-    Console.Write('║');
-    Console.SetCursorPosition(x, y + 4);
-    Console.Write('v');
+    try
+    {
+        Process.Start(url);
+    }
+    catch
+    {
+        // hack because of this: https://github.com/dotnet/corefx/issues/10361
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            url = url.Replace("&", "^&");
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            Process.Start("xdg-open", url);
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            Process.Start("open", url);
+        }
+        else
+        {
+            throw;
+        }
+    }
 }
