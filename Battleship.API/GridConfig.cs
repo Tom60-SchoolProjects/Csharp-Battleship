@@ -5,16 +5,16 @@ namespace Battleship.API;
 
 file class RawConfig {
     [JsonPropertyName("nbLignes")]
-    public int NumLines { get; }
+    public uint NumLines { get; }
 
     [JsonPropertyName("nbColonnes")]
-    public int NumColumns { get; }
+    public uint NumColumns { get; }
 
     [JsonPropertyName("bateaux")]
     public RawShipConfig[ ] Ships { get; }
 
     [JsonConstructor]
-    public RawConfig(int numLines, int numColumns, RawShipConfig[ ] ships) {
+    public RawConfig(uint numLines, uint numColumns, RawShipConfig[ ] ships) {
         NumLines   = numLines;
         NumColumns = numColumns;
         Ships      = ships;
@@ -27,13 +27,13 @@ file class RawConfig {
 
 file struct RawShipConfig {
     [JsonPropertyName("taille")]
-    public int Size { get; }
+    public uint Size { get; }
 
     [JsonPropertyName("nom")]
     public string Name { get; }
 
     [JsonConstructor]
-    public RawShipConfig(int size, string name) {
+    public RawShipConfig(uint size, string name) {
         Size = size;
         Name = name;
     }
@@ -42,7 +42,7 @@ file struct RawShipConfig {
         => new Ship(rawShip.Size, rawShip.Name);
 }
 
-public record struct Ship(int Size, string Name);
+public record struct Ship(uint Size, string Name);
 
 public class GridConfig {
     # region Constants
@@ -50,7 +50,7 @@ public class GridConfig {
     #endregion
 
     #region Properties
-    public (int X, int Y) Size  { get; }
+    public (uint X, uint Y) Size  { get; }
     public Ship[ ]        Ships { get; }
     #endregion
 
