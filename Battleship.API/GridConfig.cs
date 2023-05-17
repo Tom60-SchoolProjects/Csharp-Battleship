@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 
-namespace Battleship;
+namespace Battleship.API;
 
 file class RawConfig {
     [JsonPropertyName("nbLignes")]

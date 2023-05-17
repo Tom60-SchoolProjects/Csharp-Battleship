@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.TUI", "Battleshi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleship.MAUI", "Battleship.MAUI\Battleship.MAUI.csproj", "{EF9BCEF8-7676-4313-B237-476BD7F2A452}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleship.API", "Battleship.API\Battleship.API.csproj", "{27D8719E-942A-4F83-BADF-C85FCE6F5102}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{EF9BCEF8-7676-4313-B237-476BD7F2A452}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF9BCEF8-7676-4313-B237-476BD7F2A452}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF9BCEF8-7676-4313-B237-476BD7F2A452}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{27D8719E-942A-4F83-BADF-C85FCE6F5102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27D8719E-942A-4F83-BADF-C85FCE6F5102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27D8719E-942A-4F83-BADF-C85FCE6F5102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27D8719E-942A-4F83-BADF-C85FCE6F5102}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

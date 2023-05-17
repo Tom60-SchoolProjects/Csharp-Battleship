@@ -1,4 +1,6 @@
-﻿namespace Battleship;
+﻿using Battleship.API;
+
+namespace Battleship;
 
 public class Game {
     #region Properties
