@@ -1,20 +1,26 @@
 ﻿namespace Battleship.TUI;
 
+/// <summary>
+/// Class to handle the console buffer.
+/// Console buffer is a buffer that store the current state of the console, this allow to increase performance.
+/// </summary>
 internal class ConsoleBuffer
 {
-    public readonly int BufferHeight;
-    public readonly int BufferWidth;
-    public readonly char[] Buffer;
-    public readonly ConsoleColor[] BufferForegroundColor;    
-    public readonly ConsoleColor[] BufferBackgroundColor;
+    public int BufferHeight { get; private set; }
+    public int BufferWidth { get; private set; }
+    public char[] Buffer { get; private set; }
+    public char[] oldBuffer { get; private set; }
+    public ConsoleColor[] BufferForegroundColor { get; private set; }
+    public ConsoleColor[] BufferBackgroundColor { get; private set; }
 
-    public ConsoleBuffer() : this(Console.BufferHeight, Console.BufferWidth) { }
+    public ConsoleBuffer() : this(Console.WindowHeight, Console.WindowWidth) { }
 
     public ConsoleBuffer(int height, int width)
     {
         BufferHeight = height;
         BufferWidth = width;
         Buffer = Enumerable.Repeat(' ', BufferHeight * BufferWidth).ToArray();
+        oldBuffer = new char[Buffer.Length];
         BufferForegroundColor = new ConsoleColor[BufferHeight * BufferWidth];
         BufferBackgroundColor = new ConsoleColor[BufferHeight * BufferWidth];
     }
@@ -80,15 +86,12 @@ internal class ConsoleBuffer
         BufferBackgroundColor[startIndex] = backgroundColor;
     }
 
+    /// <summary>
+    /// Clear the buffer
+    /// </summary>
     public void Clear()
     {
-        for (int y = 0; y < BufferHeight; y++)
-        {
-            for (int x = 0; x < BufferWidth; x++)
-            {
-                Buffer[y * BufferWidth + x] = ' ';
-            }
-        }
+        Buffer = Enumerable.Repeat(' ', BufferHeight * BufferWidth).ToArray();
     }
 
     /// <summary>
@@ -107,10 +110,13 @@ internal class ConsoleBuffer
                 var xOffset = leftOffset + x;
                 var yOffset = topOffset + y;
 
-                if (xOffset >= Console.BufferWidth)
+                if (xOffset >= Console.WindowWidth)
                     continue;
 
-                if (yOffset >= Console.BufferHeight)
+                if (yOffset >= Console.WindowWidth)
+                    continue;
+
+                if (Buffer[y * BufferWidth + x] == oldBuffer[y * BufferWidth + x])
                     continue;
 
                 Console.SetCursorPosition(xOffset, yOffset);
@@ -119,5 +125,25 @@ internal class ConsoleBuffer
                 Console.Write(Buffer[y * BufferWidth + x]);
             }
         }
+
+        Array.Copy(Buffer, oldBuffer, Buffer.Length);
+    }
+
+    /// <summary>
+    /// Change the size of the buffer
+    /// </summary>
+    /// <param name="height">Height of the buffer</param>
+    /// <param name="width">Width of the buffer</param>
+    public void ChangeBufferSize(int? height = null, int? width = null)
+    {
+        height ??= Console.WindowHeight;
+        width ??= Console.WindowWidth;
+
+        BufferHeight = height.Value;
+        BufferWidth = width.Value;
+        Buffer = Enumerable.Repeat(' ', BufferHeight * BufferWidth).ToArray();
+        oldBuffer = new char[Buffer.Length];
+        BufferForegroundColor = new ConsoleColor[BufferHeight * BufferWidth];
+        BufferBackgroundColor = new ConsoleColor[BufferHeight * BufferWidth];
     }
 }

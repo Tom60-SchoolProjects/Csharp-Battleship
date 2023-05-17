@@ -12,11 +12,12 @@ internal static class Ship {
     {
         var foregroundColor = isSelected ? ConsoleColor.Black : ConsoleColor.White;
         var backgroundColor = isSelected ? ConsoleColor.White : ConsoleColor.Black;
+        size *= 2;
         size--;
 
         buffer.WriteTo("<", x, y, foregroundColor, backgroundColor);
 
-        for (int i = 1; i < size; i++)
+        for (int i = 1; i < size; i ++)
             buffer.WriteTo("=", x, y + i, foregroundColor, backgroundColor);
 
         buffer.WriteTo(">", x, y + size, foregroundColor, backgroundColor);

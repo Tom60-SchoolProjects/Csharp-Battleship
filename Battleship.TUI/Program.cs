@@ -10,14 +10,17 @@ switch (await ShowMenuAsync()) {
         break;
 }
 
-var battleground = new Battleground(10, 10);
+var battleground = new Battleground(20, 20);
 
+battleground.WriteMessage("Battle started!");
+
+// Main loop
 while (true)
 {
-    battleground.Draw();
+    battleground.Update();
 
     // Refresh speed
-    await Task.Delay(500);
+    await Task.Delay(1);
 }
 
 async Task<MenuOption> ShowMenuAsync() {
@@ -44,13 +47,10 @@ async Task<MenuOption> ShowMenuAsync() {
             }
         }
         // Menu loop
-        else
-        {
-            menu.Draw();
-        }
+        menu.Draw();
 
         // Refresh speed
-        await Task.Delay(500);
+        await Task.Delay(250);
     }
 }
 

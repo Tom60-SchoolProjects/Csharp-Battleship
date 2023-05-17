@@ -13,49 +13,59 @@ internal class Menu
 
     public void Draw()
     {
-        buffer = new();
+        if (Console.WindowHeight * Console.WindowWidth != buffer.BufferHeight * buffer.BufferWidth)
+            buffer.ChangeBufferSize();
+
+        buffer.Clear();
 
         waveOffset = waveOffset > buffer.BufferWidth ? 0 : waveOffset + 1;
 
+        // Draw UI in priority order
         try {
-            DrawWave(3, buffer.BufferHeight - 11, 0.30, waveOffset * 1, ConsoleColor.DarkGray);
+            DrawWater(buffer.BufferHeight - 7);
 
-            DrawWave(4, buffer.BufferHeight - 9, 0.20, waveOffset * 1.5, ConsoleColor.Blue);
+            DrawWave(1, buffer.BufferHeight - 7, 0.30, waveOffset * 1, ConsoleColor.DarkGray);
 
-            DrawTitle(buffer.BufferHeight - 19);
-            DrawMenu(buffer.BufferHeight / 3);
+            DrawTitle(buffer.BufferHeight - 14);
 
-            DrawWave(5, buffer.BufferHeight - 7, 0.18, waveOffset * 2, ConsoleColor.DarkCyan);
-        } catch (Exception ex) when (ex is IndexOutOfRangeException ||
-                                     ex is ArgumentOutOfRangeException) {
-            buffer.Clear();
+            DrawWave(2, buffer.BufferHeight - 5, 0.20, waveOffset * 1.5, ConsoleColor.Blue);
+
+            DrawWave(3, buffer.BufferHeight - 2, 0.18, waveOffset * 2, ConsoleColor.DarkCyan);
+
+            DrawMenu(10);
+        } catch (Exception ex)
+          when (ex is IndexOutOfRangeException || ex is ArgumentOutOfRangeException) {
             buffer.WriteTo("Please resize the window to be bigger", buffer.BufferHeight / 2, buffer.BufferWidth / 2 - 20, ConsoleColor.Red);
         }
 
         buffer.Flush();
 
         // Set console cursor and color to default
-        Console.SetCursorPosition(0, Console.BufferHeight - 1);
+        Console.SetCursorPosition(0, Console.WindowHeight - 1);
         Console.ResetColor();
     }
 
     private void DrawTitle(int startY)
     {
         var title = new string[] {
-            @"                                     # #  ( )",
-            @"                                  ___#_#___|__",
-            @"                              _  |____________|  _",
-            @"                       _=====| | |            | | |==== _",
-            @"                 =====| |.---------------------------. | |====",
-            @"   <--------------------'   .  .  .  .  .  .  .  .   '--------------/   ",
-            @"     \                             Battleship                      /",
-            @"      \___________________________________________________________/" };
+            @"                                  # #  ( )",
+            @"                               ___#_#___|__",
+            @"                           _  |____________|  _",
+            @"                    _=====| | |            | | |==== _",
+            @"              =====| |.---------------------------. | |====",
+            @"<--------------------'   .  .  .  .  .  .  .  .   '--------------/",
+            @"  \                             Battleship                      /",
+            @"   \___________________________________________________________/" };
 
         int titleWitdh = 72;
 
         for (int i = 0; i < title.Length; i++)
         {
-            buffer.WriteTo(title[i], startY + i, buffer.BufferWidth / 2 - titleWitdh / 2, ConsoleColor.Gray);
+            // Get the position of the first character that is not a whitespace
+            int firstChar = title[i].IndexOfAny(new char[] { '#', '_', '|', '=', '<', '/', '\\' });
+
+            // Draw the string after the first character
+            buffer.WriteTo(title[i].Substring(firstChar), startY + i, firstChar + (buffer.BufferWidth / 2 - titleWitdh / 2), ConsoleColor.Gray);
         }
 
     }
@@ -77,25 +87,8 @@ internal class Menu
         }
     }
 
-    private void DrawBackground()
-    {
-        /*Console.ForegroundColor = ConsoleColor.Black;
-        DrawWave(5, Console.BufferHeight - 7, 0.18, waveOffset);*/
-
-        waveOffset = waveOffset > Console.BufferWidth ? 0 : waveOffset + 1;
-
-        Console.ForegroundColor = ConsoleColor.DarkGray;
-        DrawWave(3, Console.BufferHeight - 10, 0.30, waveOffset * 1);
-
-        Console.ForegroundColor = ConsoleColor.Blue;
-        DrawWave(4, Console.BufferHeight - 8, 0.20, waveOffset * 1.5);
-
-        Console.ForegroundColor = ConsoleColor.DarkCyan;
-        DrawWave(5, Console.BufferHeight + 10, 0.18, waveOffset * 2);
-    }
-
     /// <summary>
-    /// 
+    /// Draw a wave
     /// </summary>
     /// <param name="height"></param>
     /// <param name="y">The bottom position of the wave</param>
@@ -114,7 +107,7 @@ internal class Menu
             /*Console.CursorTop = y;
             Console.Write('~');*/
 
-            buffer.WriteTo('~', y, x, waveColor);
+            buffer.WriteTo('~', y, x, waveColor, ConsoleColor.DarkBlue);
             /* Console.Move
 
             //because output appends, ensure the window is reset
@@ -130,7 +123,17 @@ internal class Menu
                     /*Console.SetCursorPosition(x, subY);
                     Console.Write('*');*/
                 }
+        }            
+    }
+
+    private void DrawWater(int startY)
+    {
+        for (int y = startY; y < buffer.BufferHeight; y++)
+        {
+            for (int x = 0; x < buffer.BufferWidth; x++)
+            {
+                buffer.WriteTo(' ', y, x, ConsoleColor.Black, ConsoleColor.DarkBlue);
+            }
         }
-            
     }
 }
