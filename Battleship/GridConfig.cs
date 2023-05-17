@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Battleship;
 
-public record RawConfig {
+file class RawConfig {
     [JsonPropertyName("nbLignes")]
     public int NumLines { get; }
 
@@ -25,7 +25,7 @@ public record RawConfig {
     }
 }
 
-public record RawShipConfig {
+file struct RawShipConfig {
     [JsonPropertyName("taille")]
     public int Size { get; }
 
@@ -38,10 +38,11 @@ public record RawShipConfig {
         Name = name;
     }
 
-    public override string ToString() {
-        return $"- {Name}: {Size} cells";
-    }
+    public static Ship ToShip(RawShipConfig rawShip)
+        => new Ship(rawShip.Size, rawShip.Name);
 }
+
+public record struct Ship(int Size, string Name);
 
 public class GridConfig {
     # region Constants
@@ -49,7 +50,8 @@ public class GridConfig {
     #endregion
 
     #region Properties
-    public (int, int) Size { get; }
+    public (int X, int Y) Size  { get; }
+    public Ship[ ]        Ships { get; }
     #endregion
 
     #region Constructors
@@ -62,7 +64,8 @@ public class GridConfig {
         RawConfig rawConfig = client.GetFromJsonAsync<RawConfig>($"{API_ROOT}/GetConfig").Result!;
 
         // Extract info
-        Size = (rawConfig.NumLines, rawConfig.NumColumns);
+        Size  = (rawConfig.NumLines, rawConfig.NumColumns);
+        Ships = rawConfig.Ships.Select(RawShipConfig.ToShip).ToArray();
     }
     #endregion
 }
