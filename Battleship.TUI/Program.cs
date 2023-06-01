@@ -40,7 +40,7 @@ async Task ShowMenuAsync() {
         }
 
         // Menu drawing every 250ms
-        if (DateTime.Now.Millisecond % 250 < 100)
+        if (DateTime.Now.Millisecond % 250 <= 10)
             menu.Draw();
 
         // Refresh speed
