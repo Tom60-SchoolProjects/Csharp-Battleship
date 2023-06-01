@@ -34,27 +34,45 @@ public class PlayerField {
     }
 
     private void InitGrid() {
-        foreach (Ship ship in Config.Ships) {
+        var toPlace  = new List<Ship>(Config.Ships);
+        var attempts = 0;
+
+        while (toPlace.Count != 0) {
+            Ship ship = toPlace[0];
+
             int startX = Random.Next((int) Config.Size.X),
                 startY = Random.Next((int) Config.Size.Y);
 
             List<(int, int)> directions = AvailableDirections(startX, startY, ship.Size);
-            (int x, int y)   direction  = directions[Random.Next(directions.Count)];
+            if (directions.Count is 0) {
+                attempts += 1;
+                if (attempts > 1_000_000) {
+                    throw new TimeoutException("Max number of placement attempts reached");
+                }
 
-            foreach (int distance in Enumerable.Range(0, (int) ship.Size - 1)) {
-                Grid[startX + direction.x * distance]
-                    [startY + direction.x * distance] = (Cell)new ShipCell(ship);
+                continue;
             }
+
+            (int x, int y) direction = directions[Random.Next(directions.Count)];
+
+            foreach (int distance in Enumerable.Range(0, (int) ship.Size)) {
+                Grid[startX + direction.x * distance]
+                    [startY + direction.y * distance] = new ShipCell(ship);
+            }
+
+            toPlace.RemoveAt(0);
         }
     }
 
     private List<(int, int)> AvailableDirections(int startX, int startY, uint size) {
-        return Directions.Where(vector => Enumerable.Range(0, (int) size - 1)
+        return Directions.Where(vector => Enumerable.Range(0, (int) size)
                                                     .Select(distance => (x: startX + vector.x * distance,
                                                                          y: startY + vector.y * distance))
-                                                    .Where(pos => 0 < pos.x && pos.x < Grid.Length)
-                                                    .Where(pos => 0 < pos.y && pos.y < Grid[0].Length)
-                                                    .All(pos => Grid[pos.x][pos.y].IsEmpty()))
+                                                    .All(pos => pos.x >= 0
+                                                             && pos.x < Grid.Length
+                                                             && pos.y >= 0
+                                                             && pos.y < Grid[0].Length
+                                                             && Grid[pos.x][pos.y].IsEmpty()))
                          .ToList();
     }
     #endregion
@@ -67,7 +85,15 @@ public class PlayerField {
         // ReSharper disable once CoVariantArrayConversion
         Grid = Enumerable.Repeat(Enumerable.Repeat((Cell) new EmptyCell(), (int) y).ToArray(), (int) x).ToArray();
 
-        InitGrid();
+        for (var i = 0; i < 10; i++) {
+            try {
+                InitGrid();
+            } catch (TimeoutException) {
+                continue;
+            }
+
+            break;
+        }
     }
     #endregion
 }
