@@ -6,7 +6,7 @@ public class PlayerFieldTests {
     {
         var player = new PlayerField();
 
-        player.ShootAt(0, 0);
+        player.ShootAt((0, 0));
         
         Assert.Pass();
     }

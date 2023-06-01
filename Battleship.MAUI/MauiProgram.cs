@@ -22,7 +22,7 @@ namespace Battleship.MAUI
 		builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddSingleton<WeatherForecastService>();
+            //builder.Services.AddSingleton<WeatherForecastService>();
 
             return builder.Build();
         }
