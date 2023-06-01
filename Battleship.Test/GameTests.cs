@@ -12,7 +12,7 @@ public class GameTests
     {
         var game = new Game();
 
-        Assert.IsTrue(game.PlayersField.Length != 0);
+        Assert.IsTrue(game.Fields.Length != 0);
         
         Assert.Pass();
     }

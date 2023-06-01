@@ -17,12 +17,12 @@ internal class Battleground {
     public readonly Game game = new();
 
     public Battleground() {
-        oceans = new Ocean[game.PlayersField.Length];
+        oceans = new Ocean[game.Fields.Length];
         
-        for (int i = 0; i < game.PlayersField.Length; i++)
+        for (int i = 0; i < game.Fields.Length; i++)
             oceans[i] = new Ocean(
-                Convert.ToUInt32(game.PlayersField[i].Grid.Length) * 2,
-                Convert.ToUInt32(game.PlayersField[i].Grid[0].Length)
+                Convert.ToUInt32(game.Fields[i].Grid.Length) * 2,
+                Convert.ToUInt32(game.Fields[i].Grid[0].Length)
             );
     }
 
@@ -62,10 +62,10 @@ internal class Battleground {
         // Draw UI in priority order
         try
         {
-            for (int i = 0; i < game.PlayersField.Length; i++)
+            for (int i = 0; i < game.Fields.Length; i++)
             {
-                int offsetX = buffer.BufferWidth / (game.PlayersField.Length + 1) * (i + 1) - game.PlayersField[i].Grid.Length / 2;
-                int offsetY = (buffer.BufferHeight / 2 - game.PlayersField[i].Grid[0].Length * 2 / 2) - MessageSystem.messageBuffer.Length;
+                int offsetX = buffer.BufferWidth / (game.Fields.Length + 1) * (i + 1) - game.Fields[i].Grid.Length / 2;
+                int offsetY = (buffer.BufferHeight / 2 - game.Fields[i].Grid[0].Length * 2 / 2) - MessageSystem.messageBuffer.Length;
 
                 DrawOcean(i, offsetX, offsetY);
                 DrawShips(i, offsetX, offsetY);
@@ -87,8 +87,8 @@ internal class Battleground {
     }
 
     private void DrawOcean(int playerId, int offsetX, int offsetY) {
-        for (int x = 0; x < game.PlayersField[playerId].Grid.Length * 2 + 1; x++) {
-            for (int y = 0; y < game.PlayersField[playerId].Grid[0].Length + 1; y++) {
+        for (int x = 0; x < game.Fields[playerId].Grid.Length * 2 + 1; x++) {
+            for (int y = 0; y < game.Fields[playerId].Grid[0].Length + 1; y++) {
 
                 if (y == 0) // Top
                 {

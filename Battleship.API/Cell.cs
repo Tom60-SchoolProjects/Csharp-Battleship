@@ -14,10 +14,10 @@ public class EmptyCell : Cell {
 }
 
 public class ShipCell : Cell {
-    public Ship Parent { get; }
+    public ConfigShip Parent { get; }
     public bool Hit    { get; set; }
 
-    public ShipCell(Ship parent) {
+    public ShipCell(ConfigShip parent) {
         Parent = parent;
         Hit    = false;
     }
