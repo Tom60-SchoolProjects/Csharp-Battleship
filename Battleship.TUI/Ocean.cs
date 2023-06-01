@@ -12,12 +12,12 @@ namespace Battleship.TUI
         internal uint Lignes { get; init; }
         internal uint Colonnes { get; init; }
 
-        int windSpeedX = 1;
-        int windSpeedY = 1;
+        private int windSpeedX = 1;
+        private int windSpeedY = 1;
 
-        bool[,] windGrid;
+        internal bool[,] windGrid { get; private set; }
 
-        public Ocean(uint lignes, uint colonnes)
+        internal Ocean(uint lignes, uint colonnes)
         {
             Lignes = lignes;
             Colonnes = colonnes;
@@ -35,7 +35,7 @@ namespace Battleship.TUI
             }
         }
 
-        private void UpdateWind()
+        internal void UpdateWind()
         {
             var newWindGrid = new bool[Lignes, Colonnes];
 
@@ -60,7 +60,7 @@ namespace Battleship.TUI
             windGrid = newWindGrid;
         }
 
-        internal char[,] GetNextDraw()
+        /* internal char[,] GetNextDraw()
         {
             UpdateWind();
 
@@ -75,6 +75,6 @@ namespace Battleship.TUI
             }
 
             return grid;
-        }
+        } */
     }
 }

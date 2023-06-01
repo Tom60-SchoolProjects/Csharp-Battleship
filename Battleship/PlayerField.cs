@@ -41,15 +41,15 @@ public class PlayerField {
             List<(int, int)> directions = AvailableDirections(startX, startY, ship.Size);
             (int x, int y)   direction  = directions[Random.Next(directions.Count)];
 
-            foreach (int distance in Enumerable.Range(0, (int) ship.Size)) {
+            foreach (int distance in Enumerable.Range(0, (int) ship.Size - 1)) {
                 Grid[startX + direction.x * distance]
-                    [startY + direction.x * distance] = new ShipCell(ship);
+                    [startY + direction.x * distance] = (Cell)new ShipCell(ship);
             }
         }
     }
 
     private List<(int, int)> AvailableDirections(int startX, int startY, uint size) {
-        return Directions.Where(vector => Enumerable.Range(0, (int) size)
+        return Directions.Where(vector => Enumerable.Range(0, (int) size - 1)
                                                     .Select(distance => (x: startX + vector.x * distance,
                                                                          y: startY + vector.y * distance))
                                                     .Where(pos => 0 < pos.x && pos.x < Grid.Length)
@@ -65,7 +65,7 @@ public class PlayerField {
         (uint x, uint y) = Config.Size;
 
         // ReSharper disable once CoVariantArrayConversion
-        Grid = Enumerable.Repeat(Enumerable.Repeat(new EmptyCell(), (int) y).ToArray(), (int) x).ToArray();
+        Grid = Enumerable.Repeat(Enumerable.Repeat((Cell) new EmptyCell(), (int) y).ToArray(), (int) x).ToArray();
 
         InitGrid();
     }

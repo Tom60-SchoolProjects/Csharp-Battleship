@@ -1,14 +1,14 @@
-namespace Battleship; 
+﻿namespace Battleship; 
 
 public class Game {
-    public  bool        TurnP1    { get; } 
-    private PlayerField Player1 { get; }
-    private PlayerField Player2 { get; }
+    public           bool          TurnP1       { get; } 
+    public  readonly PlayerField[] PlayersField;
 
     public Game() {
         TurnP1 = true;
         
-        Player1 = new PlayerField();
-        Player2 = new PlayerField();
+        PlayersField = new PlayerField[2];
+        PlayersField[0] = new PlayerField();
+        PlayersField[1] = new PlayerField();
     }
 }

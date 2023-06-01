@@ -1,29 +1,19 @@
-﻿using Battleship.TUI;
+﻿using Battleship;
+using Battleship.TUI;
 using Battleship.TUI.Enums;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-switch (await ShowMenuAsync()) {
-    case MenuOption.Exit:
-        return;
-    case MenuOption.Start:
-        break;
-}
+// Main menu
+await ShowMenuAsync();
 
-var battleground = new Battleground(20, 20);
+// Game
+await ShowGameAsync();
 
-battleground.WriteMessage("Battle started!");
-
-// Main loop
-while (true)
-{
-    battleground.Update();
-
-    // Refresh speed
-    await Task.Delay(1);
-}
-
-async Task<MenuOption> ShowMenuAsync() {
+/// <summary>
+/// Show the main menu
+/// </summary>
+async Task ShowMenuAsync() {
 
     var menu = new Menu();
 
@@ -37,24 +27,54 @@ async Task<MenuOption> ShowMenuAsync() {
             switch (key.Key)
             {
                 case ConsoleKey.Escape:
-                    return MenuOption.Exit;
+                    Environment.Exit(0);
+                    break;
                 
                 case ConsoleKey.Enter:
-                    return MenuOption.Start;
+                    return;
+
                 case ConsoleKey.S:
                     OpenUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
                     break;
             }
         }
-        // Menu loop
-        menu.Draw();
+
+        // Menu drawing every 250ms
+        if (DateTime.Now.Millisecond % 250 < 100)
+            menu.Draw();
 
         // Refresh speed
-        await Task.Delay(250);
+        await Task.Delay(10);
     }
 }
 
+async Task ShowGameAsync() {
+    var battleground = new Battleground(); //game.Config.Size.X, game.Config.Size.Y
+
+    battleground.MessageSystem.WriteMessage("Battle started!");
+
+
+    // Main loop
+    var backgroundTask = Task.Run(() => {
+        while (true)
+        {
+            battleground.Update();
+        }
+    });
+
+
+    while (true) {
+        var msg = await battleground.MessageSystem.ReadMessage();
+        battleground.MessageSystem.WriteMessage(msg);
+    }
+}
+
+
 // https://stackoverflow.com/a/43232486
+/// <summary>
+/// Open an URL in the default browser
+/// </summary>
+/// <param name="url">URL to open</param>
 void OpenUrl(string url)
 {
     try
