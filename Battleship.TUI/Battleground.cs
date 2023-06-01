@@ -17,12 +17,12 @@ internal class Battleground {
     public readonly Game game = new();
 
     public Battleground() {
-        oceans = new Ocean[game.PlayersField.Length];
+        oceans = new Ocean[game.Fields.Length];
         
-        for (int i = 0; i < game.PlayersField.Length; i++)
+        for (int i = 0; i < game.Fields.Length; i++)
             oceans[i] = new Ocean(
-                Convert.ToUInt32(game.PlayersField[i].Grid.Length),
-                Convert.ToUInt32(game.PlayersField[i].Grid[0].Length)
+                Convert.ToUInt32(game.Fields[i].Grid.Length),
+                Convert.ToUInt32(game.Fields[i].Grid[0].Length)
             );
     }
 
@@ -62,7 +62,7 @@ internal class Battleground {
         // Draw UI in priority order
         try
         {
-            for (int i = 0; i < game.PlayersField.Length; i++) {
+            for (int i = 0; i < game.Fields.Length; i++) {
                 DrawOcean(i);
                 DrawShips(i);
             }
@@ -83,11 +83,11 @@ internal class Battleground {
     }
 
     private void DrawOcean(int playerId) {            
-        int offsetX = buffer.BufferWidth / game.PlayersField.Length * playerId - game.PlayersField[playerId].Grid.GetLength(0) / 2;
-        int offsetY = buffer.BufferHeight / game.PlayersField.Length * playerId - game.PlayersField[playerId].Grid.GetLength(1) / 2;
+        int offsetX = buffer.BufferWidth / game.Fields.Length * playerId - game.Fields[playerId].Grid.GetLength(0) / 2;
+        int offsetY = buffer.BufferHeight / game.Fields.Length * playerId - game.Fields[playerId].Grid.GetLength(1) / 2;
 
-        for (int y = 0; y < game.PlayersField[playerId].Grid.GetLength(0) + 1; y++) {
-            for (int x = 0; x < game.PlayersField[playerId].Grid.GetLength(1) + 1; x++) {
+        for (int y = 0; y < game.Fields[playerId].Grid.GetLength(0) + 1; y++) {
+            for (int x = 0; x < game.Fields[playerId].Grid.GetLength(1) + 1; x++) {
 
                 if (y == 0) // Top
                 {
@@ -107,8 +107,8 @@ internal class Battleground {
 
     private void DrawShips(int playerId) {
         // Calulate the offset depending on the player id
-        int offsetX = buffer.BufferWidth / game.PlayersField.Length * playerId - game.PlayersField[playerId].Grid.GetLength(0) / 2;
-        int offsetY = buffer.BufferHeight / game.PlayersField.Length * playerId - game.PlayersField[playerId].Grid.GetLength(1) / 2;
+        int offsetX = buffer.BufferWidth / game.Fields.Length * playerId - game.Fields[playerId].Grid.GetLength(0) / 2;
+        int offsetY = buffer.BufferHeight / game.Fields.Length * playerId - game.Fields[playerId].Grid.GetLength(1) / 2;
 
         /* int offsetX = buffer.BufferWidth / 2 - game.PlayersField[playerId].Grid.GetLength(0) / 3;
         int offsetY = buffer.BufferHeight / 2 - game.PlayersField[playerId].Grid.GetLength(1) / 3; */

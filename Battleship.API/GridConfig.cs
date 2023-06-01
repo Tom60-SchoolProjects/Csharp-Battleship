@@ -38,11 +38,11 @@ file struct RawShipConfig {
         Name = name;
     }
 
-    public static Ship ToShip(RawShipConfig rawShip)
-        => new Ship(rawShip.Size, rawShip.Name);
+    public static ConfigShip ToShip(RawShipConfig rawShip)
+        => new ConfigShip(rawShip.Size, rawShip.Name);
 }
 
-public record struct Ship(uint Size, string Name);
+public record struct ConfigShip(uint Size, string Name);
 
 public class GridConfig {
     # region Constants
@@ -51,7 +51,7 @@ public class GridConfig {
 
     #region Properties
     public (uint X, uint Y) Size  { get; }
-    public Ship[ ]        Ships { get; }
+    public ConfigShip[ ]    Ships { get; }
     #endregion
 
     #region Constructors

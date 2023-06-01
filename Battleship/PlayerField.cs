@@ -4,46 +4,62 @@ using Battleship.API;
 namespace Battleship;
 
 public class PlayerField {
-    #region Constants
-    private static readonly (int x, int y)[ ] Directions = { (0, 1), (1, 0), (0, -1), (-1, 0) };
-    #endregion
-
     #region Properties
     public  GridConfig Config { get; }
-    public  Cell[ ][ ] Grid   { get; }
+    public  List<Ship> Ships  { get; }
     private Random     Random { get; } = new();
     #endregion
 
     #region Methods
-    public bool ShootAt((int x, int y) pos) {
-        Cell cell = Grid[pos.x][pos.y];
-        switch (cell) {
-            case EmptyCell: {
-                return false;
-            }
-
-            case ShipCell shipCell: {
-                shipCell.Hit = true;
-                return true;
-            }
-
-            default: {
-                throw new UnreachableException();
-            }
-        }
+    public Ship? ShipAt((int x, int y) pos) {
+        return Ships.FirstOrDefault(ship => ship.Direction switch {
+                                                Direction.East => Enumerable.Range(ship.Start.x, ship.Length)
+                                                                            .Contains(pos.x)
+                                                               && pos.y == ship.Start.y,
+                                                Direction.South => Enumerable.Range(ship.Start.y, ship.Length)
+                                                                             .Contains(pos.y)
+                                                                && pos.x == ship.Start.x,
+                                                Direction.West => Enumerable.Range(ship.Start.x - ship.Length,
+                                                                                   ship.Length)
+                                                                            .Contains(pos.x)
+                                                               && pos.y == ship.Start.y,
+                                                Direction.North => Enumerable.Range(ship.Start.x - ship.Length,
+                                                                                    ship.Length)
+                                                                             .Contains(pos.x)
+                                                                && pos.y == ship.Start.y,
+                                                _ => throw new UnreachableException(),
+                                            });
     }
 
-    private void InitGrid() {
-        var toPlace  = new List<Ship>(Config.Ships);
+    public bool ShootAt((int x, int y) pos) {
+        Ship? shipAt = ShipAt(pos);
+
+        if (shipAt is null)
+            return false;
+
+        int xDiff = shipAt.Start.x - pos.x;
+        int yDiff = shipAt.Start.y - pos.y;
+        int idx   = int.Max(xDiff, yDiff);
+
+        if (shipAt.Broken[idx]) {
+            return false;
+        }
+
+        shipAt.Broken[idx] = true;
+        return true;
+    }
+
+    private void InitShips() {
+        var toPlace  = new List<ConfigShip>(Config.Ships);
         var attempts = 0;
 
         while (toPlace.Count != 0) {
-            Ship ship = toPlace[0];
+            ConfigShip ship = toPlace[0];
 
             int startX = Random.Next((int) Config.Size.X),
                 startY = Random.Next((int) Config.Size.Y);
 
-            List<(int, int)> directions = AvailableDirections(startX, startY, ship.Size);
+            List<Direction> directions = AvailableDirections(startX, startY, ship.Size);
             if (directions.Count is 0) {
                 attempts += 1;
                 if (attempts > 1_000_000) {
@@ -53,47 +69,44 @@ public class PlayerField {
                 continue;
             }
 
-            (int x, int y) direction = directions[Random.Next(directions.Count)];
+            Direction direction = directions[Random.Next(directions.Count)];
 
-            foreach (int distance in Enumerable.Range(0, (int) ship.Size)) {
-                Grid[startX + direction.x * distance]
-                    [startY + direction.y * distance] = new ShipCell(ship);
-            }
-
+            Ships.Add(new Ship((startX, startY), (int) ship.Size, direction));
             toPlace.RemoveAt(0);
         }
     }
 
-    private List<(int, int)> AvailableDirections(int startX, int startY, uint size) {
-        return Directions.Where(vector => Enumerable.Range(0, (int) size)
-                                                    .Select(distance => (x: startX + vector.x * distance,
-                                                                         y: startY + vector.y * distance))
-                                                    .All(pos => pos.x >= 0
-                                                             && pos.x < Grid.Length
-                                                             && pos.y >= 0
-                                                             && pos.y < Grid[0].Length
-                                                             && Grid[pos.x][pos.y].IsEmpty()))
-                         .ToList();
+    private List<Direction> AvailableDirections(int startX, int startY, uint size) {
+        return DirectionExt.All.Where(direction => Enumerable.Range(0, (int) size)
+                                                             .Select(distance
+                                                                         => (x: startX + direction.Tuple().x * distance,
+                                                                             y: startY
+                                                                              + direction.Tuple().y * distance))
+                                                             .All(pos => pos.x >= 0
+                                                                      && pos.x < Config.Size.X
+                                                                      && pos.y >= 0
+                                                                      && pos.y < Config.Size.Y
+                                                                      && ShipAt(pos) is null))
+                           .ToList();
     }
     #endregion
 
     #region Constructor
     public PlayerField() {
-        Config           = new GridConfig();
-        (uint x, uint y) = Config.Size;
+        Config = new GridConfig();
 
-        // ReSharper disable once CoVariantArrayConversion
-        Grid = Enumerable.Repeat(Enumerable.Repeat((Cell) new EmptyCell(), (int) y).ToArray(), (int) x).ToArray();
-
+        Ships = new List<Ship>();
         for (var i = 0; i < 10; i++) {
             try {
-                InitGrid();
+                InitShips();
             } catch (TimeoutException) {
                 continue;
             }
 
-            break;
+            return;
         }
+
+        throw new TimeoutException("Couldn't generate ship field");
     }
     #endregion
 }
