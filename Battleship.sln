@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship", "Battleship\Ba
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.TUI", "Battleship.TUI\Battleship.TUI.csproj", "{64F36887-37BF-4B63-B357-414351CA27FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleship.API", "Battleship.API\Battleship.API.csproj", "{27D8719E-942A-4F83-BADF-C85FCE6F5102}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.API", "Battleship.API\Battleship.API.csproj", "{27D8719E-942A-4F83-BADF-C85FCE6F5102}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Test", "Battleship.Test\Battleship.Test.csproj", "{6462B575-D63A-4F29-8882-8A7826F292FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.MAUI", "Battleship.MAUI\Battleship.MAUI.csproj", "{B443EB5B-FEA0-455F-B696-E86D8DBA8253}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,16 @@ Global
 		{27D8719E-942A-4F83-BADF-C85FCE6F5102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27D8719E-942A-4F83-BADF-C85FCE6F5102}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27D8719E-942A-4F83-BADF-C85FCE6F5102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6462B575-D63A-4F29-8882-8A7826F292FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6462B575-D63A-4F29-8882-8A7826F292FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6462B575-D63A-4F29-8882-8A7826F292FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6462B575-D63A-4F29-8882-8A7826F292FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B443EB5B-FEA0-455F-B696-E86D8DBA8253}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B443EB5B-FEA0-455F-B696-E86D8DBA8253}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B443EB5B-FEA0-455F-B696-E86D8DBA8253}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B443EB5B-FEA0-455F-B696-E86D8DBA8253}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B443EB5B-FEA0-455F-B696-E86D8DBA8253}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B443EB5B-FEA0-455F-B696-E86D8DBA8253}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
