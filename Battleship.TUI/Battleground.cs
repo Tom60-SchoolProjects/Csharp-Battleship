@@ -21,8 +21,8 @@ internal class Battleground {
         
         for (int i = 0; i < game.PlayersField.Length; i++)
             oceans[i] = new Ocean(
-                Convert.ToUInt32(game.PlayersField[i].Grid.GetLength(0)),
-                Convert.ToUInt32(game.PlayersField[i].Grid.GetLength(1))
+                Convert.ToUInt32(game.PlayersField[i].Grid.Length),
+                Convert.ToUInt32(game.PlayersField[i].Grid[0].Length)
             );
     }
 
