@@ -31,8 +31,6 @@ public class PlayerField {
                 throw new UnreachableException();
             }
         }
-
-        ;
     }
 
     private void InitGrid() {
@@ -54,8 +52,8 @@ public class PlayerField {
         return Directions.Where(vector => Enumerable.Range(0, (int) size)
                                                     .Select(distance => (x: startX + vector.x * distance,
                                                                          y: startY + vector.y * distance))
-                                                    .Where(pos => 0 < pos.x && pos.x < Grid.GetLength(0))
-                                                    .Where(pos => 0 < pos.y && pos.y < Grid.GetLength(1))
+                                                    .Where(pos => 0 < pos.x && pos.x < Grid.Length)
+                                                    .Where(pos => 0 < pos.y && pos.y < Grid[0].Length)
                                                     .All(pos => Grid[pos.x][pos.y].IsEmpty()))
                          .ToList();
     }
