@@ -8,9 +8,10 @@ namespace Battleship;
 /// </summary>
 public class PlayerField {
     #region Properties
-    public  GridConfig Config { get; }
-    public  List<Ship> Ships  { get; }
-    private Random     Random { get; } = new();
+    public  GridConfig             Config { get; }
+    public  List<Ship>             Ships  { get; }
+    public  List<(uint x, uint y)> Missed { get; } = new();
+    private Random                 Random { get; } = new();
     #endregion
 
     #region Methods
