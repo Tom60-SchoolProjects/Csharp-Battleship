@@ -25,6 +25,13 @@ internal class ConsoleBuffer
         BufferBackgroundColor = new ConsoleColor[BufferHeight * BufferWidth];
     }
 
+
+    public void WriteTo(in string text, in int top, in int left,
+                         in ConsoleColor foregroundColor = ConsoleColor.Gray,
+                         in ConsoleColor backgroundColor = ConsoleColor.Black) =>
+        WriteTo(text, Convert.ToUInt32(top), Convert.ToUInt32(left), foregroundColor, backgroundColor);
+
+
     /// <summary>
     /// Write to the given position inside the buffer
     /// </summary>
@@ -36,7 +43,7 @@ internal class ConsoleBuffer
     /// - or -
     /// when left is greater than the width of the buffer
     /// </exception>
-    public void WriteTo( in string text, in int top, in int left,
+    public void WriteTo( in string text, in uint top, in uint left,
                          in ConsoleColor foregroundColor = ConsoleColor.Gray,
                          in ConsoleColor backgroundColor = ConsoleColor.Black )
     {
@@ -57,6 +64,11 @@ internal class ConsoleBuffer
         }
     }
 
+    public void WriteTo(in char text, in int top, in int left,
+                         in ConsoleColor foregroundColor = ConsoleColor.Gray,
+                         in ConsoleColor backgroundColor = ConsoleColor.Black) =>
+        WriteTo(text, Convert.ToUInt32(top), Convert.ToUInt32(left), foregroundColor, backgroundColor);
+
 
     /// <summary>
     /// Write to the given position inside the buffer
@@ -69,7 +81,7 @@ internal class ConsoleBuffer
     /// - or -
     /// when left is greater than the width of the buffer
     /// </exception>
-    public void WriteTo( in char character, in int top, in int left, 
+    public void WriteTo( in char character, in uint top, in uint left, 
                          in ConsoleColor foregroundColor = ConsoleColor.Gray,
                          in ConsoleColor backgroundColor = ConsoleColor.Black )
     {
@@ -107,8 +119,8 @@ internal class ConsoleBuffer
         {
             for (int x = 0; x < BufferWidth; x++)
             {
-                var xOffset = leftOffset + x;
-                var yOffset = topOffset + y;
+                int xOffset = leftOffset + x;
+                int yOffset = topOffset + y;
 
                 if (xOffset >= Console.WindowWidth)
                     continue;

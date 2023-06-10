@@ -11,19 +11,19 @@ public class PlayerField {
     #endregion
 
     #region Methods
-    public Ship? ShipAt((int x, int y) pos) {
+    public Ship? ShipAt((uint x, uint y) pos) {
         return Ships.FirstOrDefault(ship => ship.Direction switch {
-                                                Direction.East => Enumerable.Range(ship.Start.x, ship.Length)
+                                                Direction.East => Range(ship.Start.x, ship.Length)
                                                                             .Contains(pos.x)
                                                                && pos.y == ship.Start.y,
-                                                Direction.South => Enumerable.Range(ship.Start.y, ship.Length)
+                                                Direction.South => Range(ship.Start.y, ship.Length)
                                                                              .Contains(pos.y)
                                                                 && pos.x == ship.Start.x,
-                                                Direction.West => Enumerable.Range(ship.Start.x - ship.Length,
+                                                Direction.West => Range(ship.Start.x - ship.Length,
                                                                                    ship.Length)
                                                                             .Contains(pos.x)
                                                                && pos.y == ship.Start.y,
-                                                Direction.North => Enumerable.Range(ship.Start.x - ship.Length,
+                                                Direction.North => Range(ship.Start.x - ship.Length,
                                                                                     ship.Length)
                                                                              .Contains(pos.x)
                                                                 && pos.y == ship.Start.y,
@@ -31,15 +31,15 @@ public class PlayerField {
                                             });
     }
 
-    public bool ShootAt((int x, int y) pos) {
+    public bool ShootAt((uint x, uint y) pos) {
         Ship? shipAt = ShipAt(pos);
 
         if (shipAt is null)
             return false;
 
-        int xDiff = shipAt.Start.x - pos.x;
-        int yDiff = shipAt.Start.y - pos.y;
-        int idx   = int.Max(xDiff, yDiff);
+        uint xDiff = shipAt.Start.x - pos.x;
+        uint yDiff = shipAt.Start.y - pos.y;
+        uint idx   = uint.Max(xDiff, yDiff);
 
         if (shipAt.Broken[idx]) {
             return false;
@@ -56,8 +56,8 @@ public class PlayerField {
         while (toPlace.Count != 0) {
             ConfigShip ship = toPlace[0];
 
-            int startX = Random.Next((int) Config.Size.X),
-                startY = Random.Next((int) Config.Size.Y);
+            uint startX = Convert.ToUInt32(Random.Next((int) Config.Size.X)),
+                startY = Convert.ToUInt32(Random.Next((int) Config.Size.Y));
 
             List<Direction> directions = AvailableDirections(startX, startY, ship.Size);
             if (directions.Count is 0) {
@@ -71,12 +71,12 @@ public class PlayerField {
 
             Direction direction = directions[Random.Next(directions.Count)];
 
-            Ships.Add(new Ship((startX, startY), (int) ship.Size, direction));
+            Ships.Add(new Ship((startX, startY), ship.Size, direction));
             toPlace.RemoveAt(0);
         }
     }
 
-    private List<Direction> AvailableDirections(int startX, int startY, uint size) {
+    private List<Direction> AvailableDirections(uint startX, uint startY, uint size) {
         return DirectionExt.All.Where(direction => Enumerable.Range(0, (int) size)
                                                              .Select(distance
                                                                          => (x: startX + direction.Tuple().x * distance,
@@ -86,8 +86,18 @@ public class PlayerField {
                                                                       && pos.x < Config.Size.X
                                                                       && pos.y >= 0
                                                                       && pos.y < Config.Size.Y
-                                                                      && ShipAt(pos) is null))
+                                                                      && ShipAt((Convert.ToUInt32(pos.x), Convert.ToUInt32(pos.y))) is null))
                            .ToList();
+    }
+
+    private static IEnumerable<uint> Range(uint startValue = 0, uint maxValue = uint.MaxValue)
+    {
+        uint index = startValue;
+
+        while (index < maxValue)
+        {
+            yield return index++;
+        }
     }
     #endregion
 

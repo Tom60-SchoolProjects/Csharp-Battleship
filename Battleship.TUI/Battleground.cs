@@ -21,8 +21,8 @@ internal class Battleground {
         
         for (int i = 0; i < game.Fields.Length; i++)
             oceans[i] = new Ocean(
-                Convert.ToUInt32(game.Fields[i].Grid.Length) * 2,
-                Convert.ToUInt32(game.Fields[i].Grid[0].Length)
+                Convert.ToUInt32(game.Fields[i].Config.Size.X) * 2,
+                Convert.ToUInt32(game.Fields[i].Config.Size.Y)
             );
     }
 
@@ -62,13 +62,13 @@ internal class Battleground {
         // Draw UI in priority order
         try
         {
-            for (int i = 0; i < game.Fields.Length; i++)
+            for (uint i = 0; i < game.Fields.Length; i++)
             {
-                int offsetX = buffer.BufferWidth / (game.Fields.Length + 1) * (i + 1) - game.Fields[i].Grid.Length / 2;
-                int offsetY = (buffer.BufferHeight / 2 - game.Fields[i].Grid[0].Length * 2 / 2) - MessageSystem.messageBuffer.Length;
+                uint offsetX = Convert.ToUInt32(buffer.BufferWidth / (game.Fields.Length + 1)) * (i + 1) - game.Fields[i].Config.Size.X / 2;
+                uint offsetY = Convert.ToUInt32((buffer.BufferHeight / 2 - game.Fields[i].Config.Size.X * 2 / 2) - MessageSystem.messageBuffer.Length);
 
                 DrawOcean(i, offsetX, offsetY);
-                DrawShips(i, offsetX, offsetY);
+                DrawShips(i, offsetX + 1, offsetY + 1);
             }
 
             DrawConsole();
@@ -86,9 +86,9 @@ internal class Battleground {
         Console.ResetColor();
     }
 
-    private void DrawOcean(int playerId, int offsetX, int offsetY) {
-        for (int x = 0; x < game.Fields[playerId].Grid.Length * 2 + 1; x++) {
-            for (int y = 0; y < game.Fields[playerId].Grid[0].Length + 1; y++) {
+    private void DrawOcean(uint playerId, uint offsetX, uint offsetY) {
+        for (uint x = 0; x < game.Fields[playerId].Config.Size.X * 2 + 1; x++) {
+            for (uint y = 0; y < game.Fields[playerId].Config.Size.Y + 1; y++) {
 
                 if (y == 0) // Top
                 {
@@ -106,14 +106,20 @@ internal class Battleground {
         }
     }
 
-    private void DrawShips(int playerId, int offsetX, int offsetY) {
-        Ship.DrawHorizontalShip(buffer, offsetY + 1, offsetX + 1, 5);
+    private void DrawShips(uint playerId, uint offsetX, uint offsetY) {
+
+        foreach(var ship in game.Fields[playerId].Ships)
+        {
+            Ship.DrawShip(buffer, ship, offsetX, offsetY);
+        }
+
+        /*Ship.DrawHorizontalShip(buffer, offsetY + 1, offsetX + 1, 5);
         Ship.DrawVerticalShip(buffer, offsetY + 5, offsetX + 5, 5);
 
         Ship.DrawHorizontalShip(buffer, offsetY + 5, offsetX + 10, 5, true);
 
         Ship.DrawHorizontalShipwreck(buffer, offsetY + 7, offsetX + 12, 5);
-        Ship.DrawVerticalShipwreck(buffer, offsetY + 9, offsetX + 2, 5);
+        Ship.DrawVerticalShipwreck(buffer, offsetY + 9, offsetX + 2, 5);*/
     }
 
     private void DrawConsole()
