@@ -123,7 +123,7 @@ public class PlayerField {
 
     #region Constructor
     public PlayerField() {
-        Config = new GridConfig();
+        Config = GridConfig.Singleton;
 
         Ships = new List<Ship>();
         for (var i = 0; i < 10; i++) {
@@ -137,6 +137,11 @@ public class PlayerField {
         }
 
         throw new TimeoutException("Couldn't generate ship field");
+    }
+
+    public PlayerField(List<Ship> ships) {
+        Config = GridConfig.Singleton;
+        Ships  = ships;
     }
     #endregion
 }

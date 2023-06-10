@@ -58,7 +58,8 @@ public record struct ConfigShip(uint Size, string Name);
 /// </summary>
 public class GridConfig {
     # region Constants
-    private const string API_ROOT = "https://api-lprgi.natono.biz/api";
+    private const string     API_ROOT = "https://api-lprgi.natono.biz/api";
+    public static GridConfig Singleton { get; } = new GridConfig();
     #endregion
 
     #region Properties
@@ -67,7 +68,7 @@ public class GridConfig {
     #endregion
 
     #region Constructors
-    public GridConfig() {
+    private GridConfig() {
         // Init request
         var client = new HttpClient();
         client.DefaultRequestHeaders.Add("x-functions-key", "lprgi_api_key_2023");

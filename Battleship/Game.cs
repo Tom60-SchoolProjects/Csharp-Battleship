@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Battleship.API;
 
 namespace Battleship;
 
@@ -34,6 +35,22 @@ public class Game {
         Fields    = new PlayerField[2];
         Fields[0] = new PlayerField();
         Fields[1] = new PlayerField();
+    }
+
+    public Game(List<Ship> ships) {
+        ActivePlayer = 0;
+
+        Fields    = new PlayerField[2];
+        Fields[0] = new PlayerField(ships);
+        Fields[1] = new PlayerField();
+    }
+
+    public Game(List<Ship> ships1, List<Ship> ships2) {
+        ActivePlayer = 0;
+
+        Fields    = new PlayerField[2];
+        Fields[0] = new PlayerField(ships1);
+        Fields[1] = new PlayerField(ships2);
     }
     #endregion
 }
