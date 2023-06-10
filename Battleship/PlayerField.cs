@@ -19,12 +19,12 @@ public class PlayerField {
                                                 Direction.South => Range(ship.Start.y, ship.Length)
                                                                       .Contains(pos.y)
                                                                 && pos.x == ship.Start.x,
-                                                Direction.West => Range(ship.Start.x - ship.Length, ship.Length)
+                                                Direction.West => Range(ship.Start.x - ship.Length + 1, ship.Length)
                                                                      .Contains(pos.x)
                                                                && pos.y == ship.Start.y,
-                                                Direction.North => Range(ship.Start.x - ship.Length, ship.Length)
-                                                                      .Contains(pos.x)
-                                                                && pos.y == ship.Start.y,
+                                                Direction.North => Range(ship.Start.y - ship.Length + 1, ship.Length)
+                                                                      .Contains(pos.y)
+                                                                && pos.x == ship.Start.x,
                                                 _ => throw new UnreachableException(),
                                             });
     }
@@ -36,8 +36,8 @@ public class PlayerField {
         if (shipAt is null)
             return false;
 
-        long xDiff = (long) shipAt.Start.x - pos.x;
-        long yDiff = (long) shipAt.Start.y - pos.y;
+        long xDiff = Math.Abs((long) shipAt.Start.x - pos.x);
+        long yDiff = Math.Abs((long) shipAt.Start.y - pos.y);
         long idx   = long.Max(xDiff, yDiff);
 
         if (shipAt.Broken[idx]) {

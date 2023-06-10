@@ -2,6 +2,9 @@
 	
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">/usr/share/dotnet/sdk/7.0.203/MSBuild.dll</s:String>
 	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/BuildTool/MsbuildVersion/@EntryValue">1114112</s:Int64>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0733dc5e_002D53a0_002D4ba3_002Dbd66_002D38321b73ff44/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;Battleship.Test&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Project Location="/home/arthur/GitHub/Battleship/Battleship.Test" Presentation="&amp;lt;Battleship.Test&amp;gt;" /&gt;
+&lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=b443eb5b_002Dfea0_002D455f_002Db696_002De86d8dba8253_0023Battleship_002EMAUI/@EntryIndexedValue">True</s:Boolean>
 	
 	</wpf:ResourceDictionary>
