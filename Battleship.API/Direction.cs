@@ -2,6 +2,9 @@ using System.Diagnostics;
 
 namespace Battleship.API;
 
+/// <summary>
+/// Defines all available directions for a ship
+/// </summary>
 public enum Direction {
     East,
     South,

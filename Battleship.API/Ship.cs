@@ -1,5 +1,8 @@
 namespace Battleship.API;
 
+/// <summary>
+/// Define a ship as it appears on a <c>PlayerField</c>
+/// </summary>
 public class Ship {
     #region Properties
     public (uint x, uint y) Start     { get; }

@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Battleship.API;
 
+/// <summary>
+/// Define the raw config received from the server
+/// </summary>
 file class RawConfig {
     [JsonPropertyName("nbLignes")]
     public uint NumLines { get; }
@@ -25,6 +28,9 @@ file class RawConfig {
     }
 }
 
+/// <summary>
+/// Define the raw config element of a ship, as received from the server
+/// </summary>
 file struct RawShipConfig {
     [JsonPropertyName("taille")]
     public uint Size { get; }
@@ -42,8 +48,14 @@ file struct RawShipConfig {
         => new ConfigShip(rawShip.Size, rawShip.Name);
 }
 
+/// <summary>
+/// Define a ship, as will be used in the game config
+/// </summary>
 public record struct ConfigShip(uint Size, string Name);
 
+/// <summary>
+/// Define the global config, as will be used in the game config 
+/// </summary>
 public class GridConfig {
     # region Constants
     private const string API_ROOT = "https://api-lprgi.natono.biz/api";
