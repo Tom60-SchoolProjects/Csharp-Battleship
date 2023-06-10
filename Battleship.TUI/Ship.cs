@@ -21,18 +21,29 @@ internal static class Ship {
             var foregroundColor = broken ? ConsoleColor.DarkGray : ConsoleColor.White;
             var backgroundColor = broken ? ConsoleColor.DarkBlue : ConsoleColor.DarkBlue;
 
-            uint x = (horizontal ? config.Start.x + i : config.Start.x) + offsetX;
-            uint y = (horizontal ? config.Start.y : config.Start.y + i) + offsetY;
+            uint x = horizontal ?
+                        reverse ?
+                            (config.Start.x * 2) - i * 2 :
+                            (config.Start.x * 2) + i * 2 :
+                        config.Start.x * 2;
+            uint y = horizontal ?
+                        config.Start.y :
+                        reverse ?
+                            config.Start.y - i :
+                            config.Start.y + i;
 
-            string shipPartStart = horizontal ? (broken ? "/" : "<") : (broken ? "/_" : "/\\");
-            string shipPartEnd = horizontal ? (broken ? "_" : ">") : (broken ? "v\\ " : " \\/");
-            string shipPart = horizontal ? (broken ? "x" : "=") : (broken ? "xx" : "||");
+            x += offsetX;
+            y += offsetY;
 
-            if (i == 0)
-                buffer.WriteTo(shipPartStart, y, x, foregroundColor, backgroundColor);
-            else if (Convert.ToUInt32(config.Length) - 1 == i)
-                buffer.WriteTo(shipPartEnd, y, x, foregroundColor, backgroundColor);
-            else
+            string shipPartStart = horizontal ? (broken ? "/" : "<=") : (broken ? "/_" : "/\\");
+            string shipPartEnd = horizontal ? (broken ? "_" : "=>") : (broken ? "v\\ " : "\\/");
+            string shipPart = horizontal ? (broken ? "x" : "==") : (broken ? "xx" : "||");
+
+            if (i == 0) // Draw the front of the ship
+                buffer.WriteTo(reverse ? shipPartEnd : shipPartStart, y, x, foregroundColor, backgroundColor);
+            else if (Convert.ToUInt32(config.Length) - 1 == i) // Draw the back of the ship
+                buffer.WriteTo(reverse ? shipPartStart : shipPartEnd, y, x, foregroundColor, backgroundColor);
+            else // Draw the body of the ship
                 buffer.WriteTo(shipPart, y, x, foregroundColor, backgroundColor);
         }
     }

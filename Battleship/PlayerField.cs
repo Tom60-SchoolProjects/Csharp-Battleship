@@ -12,6 +12,7 @@ public class PlayerField {
 
     #region Methods
     public Ship? ShipAt((uint x, uint y) pos) {
+        Debug.Write("Ship at " + pos + "?");
         return Ships.FirstOrDefault(ship => ship.Direction switch {
                                                 Direction.East => Range(ship.Start.x, ship.Length)
                                                                             .Contains(pos.x)
@@ -19,12 +20,10 @@ public class PlayerField {
                                                 Direction.South => Range(ship.Start.y, ship.Length)
                                                                              .Contains(pos.y)
                                                                 && pos.x == ship.Start.x,
-                                                Direction.West => Range(ship.Start.x - ship.Length,
-                                                                                   ship.Length)
+                                                Direction.West => Range(ship.Start.x - ship.Length, ship.Length)
                                                                             .Contains(pos.x)
                                                                && pos.y == ship.Start.y,
-                                                Direction.North => Range(ship.Start.x - ship.Length,
-                                                                                    ship.Length)
+                                                Direction.North => Range(ship.Start.x - ship.Length, ship.Length)
                                                                              .Contains(pos.x)
                                                                 && pos.y == ship.Start.y,
                                                 _ => throw new UnreachableException(),
@@ -34,12 +33,13 @@ public class PlayerField {
     public bool ShootAt((uint x, uint y) pos) {
         Ship? shipAt = ShipAt(pos);
 
+        // Check if there is a ship at the given position
         if (shipAt is null)
             return false;
 
-        uint xDiff = shipAt.Start.x - pos.x;
-        uint yDiff = shipAt.Start.y - pos.y;
-        uint idx   = uint.Max(xDiff, yDiff);
+        long xDiff = (long)shipAt.Start.x - pos.x;
+        long yDiff = (long)shipAt.Start.y - pos.y;
+        long idx   = long.Max(xDiff, yDiff);
 
         if (shipAt.Broken[idx]) {
             return false;

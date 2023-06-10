@@ -1,9 +1,3 @@
-
-
-using System.Diagnostics;
-using Battleship.TUI.Enums;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace Battleship.TUI;
 
 /// <summary>
@@ -15,6 +9,7 @@ internal class Battleground {
 
     public readonly MessageSystem MessageSystem = new();
     public readonly Game game = new();
+    public bool ShowLiveShips;
 
     public Battleground() {
         oceans = new Ocean[game.Fields.Length];
@@ -110,16 +105,16 @@ internal class Battleground {
 
         foreach(var ship in game.Fields[playerId].Ships)
         {
+            // Show only broken ships if this player transition fase
+            if (!ShowLiveShips && ship.Broken.Any(b => !b))
+                continue;
+
+            // Show only broken ships if this is the enemy
+            if (playerId != game.ActivePlayer && ship.Broken.Any(b => !b))
+                continue;
+            
             Ship.DrawShip(buffer, ship, offsetX, offsetY);
         }
-
-        /*Ship.DrawHorizontalShip(buffer, offsetY + 1, offsetX + 1, 5);
-        Ship.DrawVerticalShip(buffer, offsetY + 5, offsetX + 5, 5);
-
-        Ship.DrawHorizontalShip(buffer, offsetY + 5, offsetX + 10, 5, true);
-
-        Ship.DrawHorizontalShipwreck(buffer, offsetY + 7, offsetX + 12, 5);
-        Ship.DrawVerticalShipwreck(buffer, offsetY + 9, offsetX + 2, 5);*/
     }
 
     private void DrawConsole()
