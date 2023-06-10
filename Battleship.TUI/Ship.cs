@@ -10,7 +10,7 @@ namespace Battleship.TUI;
 
 internal static class Ship {
 
-    internal static void DrawShip(in ConsoleBuffer buffer, in API.Ship config, uint offsetX, uint offsetY)
+    internal static void DrawShip(in ConsoleBuffer buffer, in API.Ship config, uint offsetX, uint offsetY, bool ennemyView)
     {
         bool horizontal = config.Direction == API.Direction.East || config.Direction == API.Direction.West;
         bool reverse = config.Direction == API.Direction.West || config.Direction == API.Direction.North;
@@ -18,8 +18,8 @@ internal static class Ship {
         for (uint i = 0; i < config.Length; i++)
         {
             var broken = config.Broken[i];
-            var foregroundColor = broken ? ConsoleColor.DarkGray : ConsoleColor.White;
-            var backgroundColor = broken ? ConsoleColor.DarkBlue : ConsoleColor.DarkBlue;
+            var foregroundColor = broken ? ConsoleColor.Red : ConsoleColor.Green;
+            var backgroundColor = broken ? ConsoleColor.DarkGray : ConsoleColor.DarkBlue;
 
             uint x = horizontal ?
                         reverse ?
@@ -35,9 +35,13 @@ internal static class Ship {
             x += offsetX;
             y += offsetY;
 
-            string shipPartStart = horizontal ? (broken ? "/" : "<=") : (broken ? "/_" : "/\\");
-            string shipPartEnd = horizontal ? (broken ? "_" : "=>") : (broken ? "v\\ " : "\\/");
-            string shipPart = horizontal ? (broken ? "x" : "==") : (broken ? "xx" : "||");
+            // Don't show borken part in the extremity of the ship if this is the ennemy view
+            string shipPartStart = horizontal ? (broken ? "/-" : "<=") : (broken ? "/_" : "/\\");
+            string shipPartEnd = horizontal ? (broken ? "_\\" : "=>") : (broken ? "v\\ " : "\\/");
+            string shipPart = horizontal ? (broken ? "xx" : "==") : (broken ? "xx" : "||");
+
+            if (ennemyView)
+                shipPartStart = shipPartEnd = shipPart = horizontal ? (broken ? "xx" : "") : (broken ? "xx" : "");
 
             if (i == 0) // Draw the front of the ship
                 buffer.WriteTo(reverse ? shipPartEnd : shipPartStart, y, x, foregroundColor, backgroundColor);

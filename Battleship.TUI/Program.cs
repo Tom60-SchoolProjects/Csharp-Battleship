@@ -1,6 +1,4 @@
-﻿using Battleship;
-using Battleship.TUI;
-using Battleship.TUI.Enums;
+﻿using Battleship.TUI;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -52,11 +50,13 @@ async Task ShowMenuAsync() {
     }
 }
 
+/// <summary>
+/// Show the game
+/// </summary>
 async Task ShowGameAsync(CancellationTokenSource cancellationToken) {
-    var battleground = new Battleground(); //game.Config.Size.X, game.Config.Size.Y
+    var battleground = new Battleground();
 
     battleground.MessageSystem.WriteMessage("Battle started!");
-
 
     // Main loop
     var backgroundTask = Task.Run(() => {
@@ -66,11 +66,10 @@ async Task ShowGameAsync(CancellationTokenSource cancellationToken) {
         }
     });
 
-
     while (!cancellationToken.IsCancellationRequested) {
         // We warn the player that it's his turn and we wait for him to press a key before showing his ships
         battleground.ShowLiveShips = false;
-        battleground.MessageSystem.WriteMessage($"Player {battleground.game.ActivePlayer + 1} that your turn!");
+        battleground.MessageSystem.WriteMessage($"Player {battleground.game.ActivePlayer + 1} it's your turn!");
         battleground.MessageSystem.WriteMessage($"Press any keys to show your ships.");
         Console.ReadKey();
 
@@ -88,7 +87,7 @@ async Task ShowGameAsync(CancellationTokenSource cancellationToken) {
         while (x == uint.MaxValue && x == y)
         {
             // Read the player input
-            playerInput = await battleground.MessageSystem.ReadMessage();
+            playerInput = (await battleground.MessageSystem.ReadMessage()).Trim().ToUpper();
 
             // Get the position
             try
@@ -109,14 +108,14 @@ async Task ShowGameAsync(CancellationTokenSource cancellationToken) {
         }
 
         // Attack the position
-        battleground.MessageSystem.WriteMessage($"Attacking position {playerInput[0]}{y}...");
         var result = battleground.game.Fields[battleground.game.ActivePlayer == 0 ? (ushort)1 : (ushort)0].ShootAt((x, y));
+        battleground.game.GetCurrentPlayer().Missed.Add((x, y));
         
         // Show the result
         if (result)
-            battleground.MessageSystem.WriteMessage($"You hit a ship!");
+            battleground.MessageSystem.WriteMessage($"You hit a ship at {playerInput[0]}{x + 1}!");
         else
-            battleground.MessageSystem.WriteMessage($"You missed!");
+            battleground.MessageSystem.WriteMessage($"You missed at {playerInput[0]}{x + 1}!");
 
         // Check if the game is over
         foreach (var field in battleground.game.Fields)
@@ -125,6 +124,8 @@ async Task ShowGameAsync(CancellationTokenSource cancellationToken) {
             {
                 // Show the winner
                 battleground.MessageSystem.WriteMessage($"Player {battleground.game.ActivePlayer + 1} won the game!");
+                battleground.MessageSystem.WriteMessage($"Press any keys to return to the main menu.");
+
                 // Wait for the player to press a key before returning to main menu
                 Console.ReadKey();
                 cancellationToken.Cancel();

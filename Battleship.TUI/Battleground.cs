@@ -11,6 +11,8 @@ internal class Battleground {
     public readonly Game game = new();
     public bool ShowLiveShips;
 
+    //private bool[,] hits;
+
     public Battleground() {
         oceans = new Ocean[game.Fields.Length];
         
@@ -19,7 +21,15 @@ internal class Battleground {
                 Convert.ToUInt32(game.Fields[i].Config.Size.X) * 2,
                 Convert.ToUInt32(game.Fields[i].Config.Size.Y)
             );
+
+        //hits = new bool[game.Fields[0].Config.Size.X * 2, game.Fields[0].Config.Size.Y];
     }
+
+    /*public void Hit(uint x, uint y)
+    {
+        hits[x * 2, y] = true;
+        hits[(x * 2) + 1, y] = true;
+    }*/
 
     public void Update()
     {
@@ -95,25 +105,34 @@ internal class Battleground {
                 else if (x == 0) // Left
                     buffer.WriteTo((char)(y + 'A' - 1), offsetY + y, offsetX + x, ConsoleColor.Black, y % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.White);
                 else
-                    buffer.WriteTo(oceans[playerId].windGrid[x - 1, y - 1] ? '~' : '-', offsetY + y, offsetX + x, ConsoleColor.White, ConsoleColor.DarkBlue);
+                {
+                    if (game.Fields[playerId].Missed.Contains((Convert.ToUInt32(Math.Floor((x - 1) / 2f) * 2), y - 1)))
+                        buffer.WriteTo(oceans[playerId].windGrid[x - 1, y - 1] ? '~' : '—',
+                            offsetY + y, offsetX + x,
+                            ConsoleColor.White, ConsoleColor.DarkGray);
+                    else
+                        buffer.WriteTo(oceans[playerId].windGrid[x - 1, y - 1] ? '~' : '-',
+                            offsetY + y, offsetX + x,
+                            ConsoleColor.White, ConsoleColor.DarkBlue);
+                }
 
             }
         }
     }
 
-    private void DrawShips(uint playerId, uint offsetX, uint offsetY) {
-
+    private void DrawShips(uint playerId, uint offsetX, uint offsetY)
+    {
         foreach(var ship in game.Fields[playerId].Ships)
         {
-            // Show only broken ships if this player transition fase
+            /*// Show only broken ships if this player transition fase
             if (!ShowLiveShips && ship.Broken.Any(b => !b))
                 continue;
 
             // Show only broken ships if this is the enemy
             if (playerId != game.ActivePlayer && ship.Broken.Any(b => !b))
-                continue;
+                continue;*/
             
-            Ship.DrawShip(buffer, ship, offsetX, offsetY);
+            Ship.DrawShip(buffer, ship, offsetX, offsetY, playerId != game.ActivePlayer || !ShowLiveShips);
         }
     }
 
