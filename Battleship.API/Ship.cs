@@ -3,9 +3,9 @@ namespace Battleship.API;
 public class Ship {
     #region Properties
     public (uint x, uint y) Start     { get; }
-    public uint Length    { get; }
-    public Direction      Direction { get; }
-    public bool[ ]        Broken    { get; set; }
+    public uint             Length    { get; }
+    public Direction        Direction { get; }
+    public bool[ ]          Broken    { get; set; }
     #endregion
 
     #region Constructors

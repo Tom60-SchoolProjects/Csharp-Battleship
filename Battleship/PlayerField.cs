@@ -12,19 +12,18 @@ public class PlayerField {
 
     #region Methods
     public Ship? ShipAt((uint x, uint y) pos) {
-        Debug.Write("Ship at " + pos + "?");
         return Ships.FirstOrDefault(ship => ship.Direction switch {
                                                 Direction.East => Range(ship.Start.x, ship.Length)
-                                                                            .Contains(pos.x)
+                                                                     .Contains(pos.x)
                                                                && pos.y == ship.Start.y,
                                                 Direction.South => Range(ship.Start.y, ship.Length)
-                                                                             .Contains(pos.y)
+                                                                      .Contains(pos.y)
                                                                 && pos.x == ship.Start.x,
                                                 Direction.West => Range(ship.Start.x - ship.Length, ship.Length)
-                                                                            .Contains(pos.x)
+                                                                     .Contains(pos.x)
                                                                && pos.y == ship.Start.y,
                                                 Direction.North => Range(ship.Start.x - ship.Length, ship.Length)
-                                                                             .Contains(pos.x)
+                                                                      .Contains(pos.x)
                                                                 && pos.y == ship.Start.y,
                                                 _ => throw new UnreachableException(),
                                             });
@@ -37,8 +36,8 @@ public class PlayerField {
         if (shipAt is null)
             return false;
 
-        long xDiff = (long)shipAt.Start.x - pos.x;
-        long yDiff = (long)shipAt.Start.y - pos.y;
+        long xDiff = (long) shipAt.Start.x - pos.x;
+        long yDiff = (long) shipAt.Start.y - pos.y;
         long idx   = long.Max(xDiff, yDiff);
 
         if (shipAt.Broken[idx]) {
@@ -57,12 +56,12 @@ public class PlayerField {
             ConfigShip ship = toPlace[0];
 
             uint startX = Convert.ToUInt32(Random.Next((int) Config.Size.X)),
-                startY = Convert.ToUInt32(Random.Next((int) Config.Size.Y));
+                 startY = Convert.ToUInt32(Random.Next((int) Config.Size.Y));
 
             List<Direction> directions = AvailableDirections(startX, startY, ship.Size);
             if (directions.Count is 0) {
                 attempts += 1;
-                if (attempts > 1_000_000) {
+                if (attempts > 10_000) {
                     throw new TimeoutException("Max number of placement attempts reached");
                 }
 
@@ -86,17 +85,18 @@ public class PlayerField {
                                                                       && pos.x < Config.Size.X
                                                                       && pos.y >= 0
                                                                       && pos.y < Config.Size.Y
-                                                                      && ShipAt((Convert.ToUInt32(pos.x), Convert.ToUInt32(pos.y))) is null))
+                                                                      && ShipAt((Convert.ToUInt32(pos.x),
+                                                                                 Convert.ToUInt32(pos.y))) is null))
                            .ToList();
     }
 
-    private static IEnumerable<uint> Range(uint startValue = 0, uint maxValue = uint.MaxValue)
-    {
+    private static IEnumerable<uint> Range(uint startValue, uint count) {
         uint index = startValue;
 
-        while (index < maxValue)
-        {
+        while (count > 0) {
             yield return index++;
+
+            count--;
         }
     }
     #endregion
