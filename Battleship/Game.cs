@@ -8,7 +8,7 @@ namespace Battleship;
 /// </summary>
 public class Game {
     #region Properties
-    public          ushort         ActivePlayer { get; private set; }
+    public          ushort         ActivePlayer { get; /*private*/ set; } // Same, not a good things to do
     public readonly PlayerField[ ] Fields;
     #endregion
 
@@ -37,7 +37,8 @@ public class Game {
         Fields[1] = new PlayerField();
     }
 
-    public Game(List<Ship> ships) {
+    // Sorry Athur but that add too much work for me
+    /*public Game(List<Ship> ships) {
         ActivePlayer = 0;
 
         Fields    = new PlayerField[2];
@@ -51,6 +52,6 @@ public class Game {
         Fields    = new PlayerField[2];
         Fields[0] = new PlayerField(ships1);
         Fields[1] = new PlayerField(ships2);
-    }
+    }*/
     #endregion
 }

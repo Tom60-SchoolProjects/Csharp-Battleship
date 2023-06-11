@@ -9,7 +9,7 @@ namespace Battleship;
 public class PlayerField {
     #region Properties
     public  GridConfig             Config { get; }
-    public  List<Ship>             Ships  { get; }
+    public  List<Ship>             Ships  { get; set; } // You should not do that, but I don't have time to do it properly
     public  List<(uint x, uint y)> Missed { get; } = new();
     private Random                 Random { get; } = new();
     #endregion
@@ -93,7 +93,7 @@ public class PlayerField {
     /// <summary>
     /// For a given position, find all available direction for a ship of size <c>size</c>
     /// </summary>
-    private List<Direction> AvailableDirections((uint x, uint y) start, uint size) {
+    public List<Direction> AvailableDirections((uint x, uint y) start, uint size) {
         return DirectionExt.All.Where(direction => Enumerable.Range(0, (int) size)
                                                              .Select(distance
                                                                          => (x: start.x + direction.Tuple().x * distance,

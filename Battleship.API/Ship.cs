@@ -5,10 +5,11 @@ namespace Battleship.API;
 /// </summary>
 public class Ship {
     #region Properties
-    public (uint x, uint y) Start     { get; }
+    public (uint x, uint y) Start     { get; set; } // Same here, not the best way to do it
     public uint             Length    { get; }
-    public Direction        Direction { get; }
+    public Direction        Direction { get; set; } // ...
     public bool[ ]          Broken    { get; set; }
+    public bool Visible = false;
     #endregion
 
     #region Constructors

@@ -124,15 +124,8 @@ internal class Battleground {
     {
         foreach(var ship in game.Fields[playerId].Ships)
         {
-            /*// Show only broken ships if this player transition fase
-            if (!ShowLiveShips && ship.Broken.Any(b => !b))
-                continue;
-
-            // Show only broken ships if this is the enemy
-            if (playerId != game.ActivePlayer && ship.Broken.Any(b => !b))
-                continue;*/
-            
-            Ship.DrawShip(buffer, ship, offsetX, offsetY, playerId != game.ActivePlayer || !ShowLiveShips);
+            if (ship.Visible)            
+                Ship.DrawShip(buffer, ship, offsetX, offsetY, playerId != game.ActivePlayer || !ShowLiveShips);
         }
     }
 
