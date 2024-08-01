@@ -69,16 +69,18 @@ public class GridConfig {
 
     #region Constructors
     private GridConfig() {
-        // Init request
-        var client = new HttpClient();
-        client.DefaultRequestHeaders.Add("x-functions-key", "lprgi_api_key_2023");
-
-        // Do and parse request
-        RawConfig rawConfig = client.GetFromJsonAsync<RawConfig>($"{API_ROOT}/GetConfig").Result!;
+        // API is dead, this is a template to make the game work
+        // TODO: Make a random config generator
 
         // Extract info
-        Size  = (rawConfig.NumLines, rawConfig.NumColumns);
-        Ships = rawConfig.Ships.Select(RawShipConfig.ToShip).ToArray();
+        Size  = (10, 10);
+        Ships = new[ ] {
+            new ConfigShip(5, "Porte-avion"),
+            new ConfigShip(4, "Croiseur"),
+            new ConfigShip(3, "Contre-torpilleur"),
+            new ConfigShip(3, "Contre-torpilleur"),
+            new ConfigShip(2, "Torpilleur"),
+        };
     }
     #endregion
 }
